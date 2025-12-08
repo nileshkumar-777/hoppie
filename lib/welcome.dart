@@ -149,7 +149,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     if (pageIndex < 2) {
       setState(() => pageIndex++);
     } else {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => GetStarted()));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const JourneyScreen()),
+      );
     }
   }
 
