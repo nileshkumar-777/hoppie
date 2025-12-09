@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:froggie/homescreen.dart';
 
 class JourneyScreen extends StatefulWidget {
   const JourneyScreen({super.key});
@@ -107,9 +108,29 @@ class _JourneyScreenState extends State<JourneyScreen>
               // ------------------ BUTTON ------------------
               InkWell(
                 onTap: () {
-                  // Go to Home or Dashboard
-                  // Navigator.push(...)
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      transitionDuration: Duration(milliseconds: 500),
+                      pageBuilder: (_, __, ___) => const LanguageSelectScreen(),
+                      transitionsBuilder: (_, animation, __, child) {
+                        final slide =
+                            Tween<Offset>(
+                              begin: Offset(0, 1), // from bottom
+                              end: Offset.zero,
+                            ).animate(
+                              CurvedAnimation(
+                                parent: animation,
+                                curve: Curves.easeOutCubic,
+                              ),
+                            );
+
+                        return SlideTransition(position: slide, child: child);
+                      },
+                    ),
+                  );
                 },
+
                 child: Container(
                   width: 300,
                   height: 65,

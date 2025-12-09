@@ -39,11 +39,10 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   int pageIndex = 0;
+  bool isPressed = false; // 👈 NEW: Button press state
 
-  // BACKGROUND COLORS
   final List<Color> bgColors = [navy1, navy2, navy3];
 
-  // CLEAN TEXT WIDGETS (no background)
   final List<Widget> textWidgets = [
     Column(
       children: const [
@@ -75,7 +74,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ],
     ),
-
     Column(
       children: const [
         Text(
@@ -106,7 +104,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ],
     ),
-
     Column(
       children: const [
         Text(
@@ -164,9 +161,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // ---------------------------------------------------------
-          // BASE BACKGROUND COLOR
-          // ---------------------------------------------------------
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             color: bgColors[pageIndex],
@@ -174,9 +168,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             height: h,
           ),
 
-          // ---------------------------------------------------------
-          // WIPING OVERLAY COLOR ONLY
-          // ---------------------------------------------------------
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 700),
             transitionBuilder: (child, animation) {
@@ -199,9 +190,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
 
-          // ---------------------------------------------------------
-          // TEXT POP-IN (NORMAL)
-          // ---------------------------------------------------------
           Positioned(
             top: h * 0.10,
             left: 0,
@@ -227,9 +215,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
 
-          // ---------------------------------------------------------
-          // LOGO ANIMATION (already good)
-          // ---------------------------------------------------------
           Positioned(
             top: h * 0.10 + 300,
             left: 0,
@@ -241,6 +226,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   begin: const Offset(0, 1.2),
                   end: Offset.zero,
                 ).animate(animation);
+
                 final slideOut = Tween<Offset>(
                   begin: Offset.zero,
                   end: const Offset(-1.2, 0),
@@ -260,7 +246,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
 
-          // CHARACTER NAME
           Positioned(
             top: h * 0.10 + 300 + 250 + 10,
             left: 0,
@@ -283,7 +268,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
 
-          // STATIC BOTTOM CURVE
           Positioned(
             bottom: 0,
             left: 0,
@@ -296,19 +280,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
 
-          // NEXT BUTTON
+          // ---------------------------------------------------------
+          // NEXT BUTTON WITH BROWN PRESS EFFECT
+          // ---------------------------------------------------------
           Positioned(
             bottom: h * 0.085,
             left: 0,
             right: 0,
             child: Center(
-              child: InkWell(
-                onTap: next,
-                child: Container(
+              child: GestureDetector(
+                onTapDown: (_) {
+                  setState(() => isPressed = true);
+                },
+                onTapUp: (_) {
+                  setState(() => isPressed = false);
+                  next();
+                },
+                onTapCancel: () {
+                  setState(() => isPressed = false);
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
                   width: 90,
                   height: 90,
                   decoration: BoxDecoration(
-                    color: accentColor,
+                    color: isPressed ? Colors.brown : accentColor,
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: Colors.black.withOpacity(0.3),
